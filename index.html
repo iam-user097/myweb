@@ -158,6 +158,8 @@
     .navbar {
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;     
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(10px);
       padding: 12px 30px;
@@ -200,15 +202,17 @@
       width: 100%;
     }
 
-    .logout-btn {
-      background-color: #f44336;
-      color: white;
-      border: none;
-      padding: 6px 14px;
-      font-size: 14px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+  .logout-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-left: 25px;
+}
 
     .logout-btn:hover {
       background-color: white;
@@ -354,10 +358,10 @@
     }
 
 .reset-password-section {
-  width: 100%;
+  width: auto;
   max-width: 400px;
   margin: 20px auto;
-  padding: 20px;
+  padding: 10px;
   border: 3px dashed white;
   box-shadow: 0 15px 25px rgb(255, 255, 255);
   border-radius: 6px;
@@ -374,6 +378,7 @@
 
 .form-group {
   margin-bottom: 15px;
+  display: flex;
 }
 
 .form-group label {
@@ -390,6 +395,12 @@
   border-radius: 4px;
   font-size: 14px;
   box-sizing: border-box;
+}
+
+#login label,
+#signup label {
+  color: white;
+  text-shadow: 1px 1px 2px black;
 }
 
 button {
@@ -457,6 +468,7 @@ button:hover {
 
   <!-- Dashboard -->
   <div id="dashboard">
+    <div class="wrapper">
     <nav class="navbar">
       <div class="nav-links">
         <a href="javascript:void(0)" onclick="switchDashboardPage('home')">Home</a>
@@ -467,6 +479,7 @@ button:hover {
       <div>
         <button class="logout-btn" onclick="logout()">Logout</button>
       </div>
+    </div>
     </nav>
 
     <!-- Home Content -->

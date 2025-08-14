@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Official Web App</title>
   <style>
-
+    
 /* === Responsive Enhancements === */
 @media (max-width: 768px) {
   .container {
@@ -361,12 +361,14 @@
   width: auto;
   max-width: 400px;
   margin: 20px auto;
-  padding: 10px;
+  padding: 20px;
   border: 3px dashed white;
-  box-shadow: 0 15px 25px rgb(255, 255, 255);
-  border-radius: 6px;
-  background-color: blur(20px);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
   font-family: Arial, sans-serif;
+  box-shadow: 0 0 20px 4px white;
+  transition: box-shadow 0.3s ease;
 }
 
 .reset-password-section h2 {
@@ -493,32 +495,38 @@ button:hover {
           <div class="partner-card">
             <img src="partner1.png" alt="Partner 1 Logo" />
             <button class="get-id-btn">Get ID</button>
-            <a href="#" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
+            <div class="player-id"></div>
+            <a href="https://7xnba.com/" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
           </div>
           <div class="partner-card">
             <img src="partner2.png" alt="Partner 2 Logo" />
             <button class="get-id-btn">Get ID</button>
-            <a href="#" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
+            <div class="player-id"></div>
+            <a href="https://cnba.in/" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
           </div>
           <div class="partner-card">
             <img src="partner3.png" alt="Partner 3 Logo" />
             <button class="get-id-btn">Get ID</button>
-            <a href="#" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
+            <div class="player-id"></div>
+            <a href="https://cnba247.com/" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
           </div>
           <div class="partner-card">
             <img src="partner4.png" alt="Partner 4 Logo" />
             <button class="get-id-btn">Get ID</button>
-            <a href="#" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
+            <div class="player-id"></div>
+            <a href="http://allpanel777.com/" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
           </div>
           <div class="partner-card">
             <img src="partner5.png" alt="Partner 5 Logo" />
             <button class="get-id-btn">Get ID</button>
-            <a href="#" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
+            <div class="player-id"></div>
+            <a href="https://bliss247.co/" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
           </div>
           <div class="partner-card">
             <img src="partner6.png" alt="Partner 6 Logo" />
             <button class="get-id-btn">Get ID</button>
-            <a href="#" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
+            <div class="player-id"></div>
+            <a href="https://www.r777.us/" class="visit-website" target="_blank" rel="noopener noreferrer">VISIT WEBSITE →</a>
           </div>
         </div>
       </section>
@@ -565,205 +573,199 @@ button:hover {
     <p class="message" id="message"></p>
   </form>
 </section>
-
-
   <script>
-    // JavaScript to handle page switching and authentication
+  let users = JSON.parse(localStorage.getItem('users')) || [];
 
-    // Initially show login page only
-    document.getElementById('login').style.display = 'block';
+  function showPage(page) {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('signup').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'none';
 
-    function showPage(page) {
-      // Hide all main containers
-      document.getElementById('login').style.display = 'none';
-      document.getElementById('signup').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'none';
+    if (page === 'login') {
+      document.getElementById('login').style.display = 'block';
+    } else if (page === 'signup') {
+      document.getElementById('signup').style.display = 'block';
+    } else if (page === 'dashboard') {
+      document.getElementById('dashboard').style.display = 'block';
+    }
+  }
 
-      // Show requested page
-      if (page === 'login') {
-        document.getElementById('login').style.display = 'block';
-      } else if (page === 'signup') {
-        document.getElementById('signup').style.display = 'block';
-      } else if (page === 'dashboard') {
-        document.getElementById('dashboard').style.display = 'block';
-      }
+  function switchDashboardPage(page) {
+    const sections = document.querySelectorAll('#dashboard > section, #dashboard > div.dashboard-content');
+    sections.forEach(section => section.style.display = 'none');
+    const selected = document.getElementById(page);
+    if (selected) selected.style.display = 'block';
+  }
+
+  function loadDashboard(user) {
+    document.getElementById('display-name').textContent = user.fullname;
+    document.getElementById('account-username').textContent = user.username;
+    document.getElementById('account-fullname').textContent = user.fullname;
+    document.getElementById('account-email').textContent = user.email;
+    document.getElementById('account-contact').textContent = user.contact;
+    switchDashboardPage('home');
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    const user = users.find(u => u.username === username && u.password === password);
+    if (user) {
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
+      localStorage.setItem('isLoggedOut', 'false');
+      loadDashboard(user);
+      showPage('dashboard');
+    } else {
+      alert('Invalid username or password.');
+    }
+  });
+
+  document.getElementById('signupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const fullname = document.getElementById('fullname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const contact = document.getElementById('contact').value.trim();
+    const username = document.getElementById('new-username').value.trim();
+    const password = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    if (!fullname || !email || !contact || !username || !password || !confirmPassword) {
+      alert('Please fill all fields.');
+      return;
     }
 
-    // Switch dashboard content sections
-    function switchDashboardPage(page) {
-      // Hide all dashboard content sections
-      const sections = document.querySelectorAll('#dashboard > section, #dashboard > div.dashboard-content');
-      sections.forEach(section => {
-        section.style.display = 'none';
-      });
-
-      // Show selected page
-      const selected = document.getElementById(page);
-      if (selected) {
-        selected.style.display = 'block';
-      }
+    if (password !== confirmPassword) {
+      alert('Passwords do not match.');
+      return;
     }
 
-    // Login form submission
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const username = document.getElementById('login-username').value.trim();
-      const password = document.getElementById('login-password').value;
-
-      // Simple login validation - for demo, accept any username/password
-      if (username && password) {
-        // Save logged in user info in sessionStorage for demo
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const user = users.find(u => u.username === username && u.password === password);
-        if (user) {
-          localStorage.setItem('loggedInUser', JSON.stringify(user));
-          loadDashboard(user);
-          showPage('dashboard');
-        } else {
-          alert('Invalid username or password.');
-        }
-      } else {
-        alert('Please enter both username and password.');
-      }
-    });
-
-    // Signup form submission
-    document.getElementById('signupForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const fullname = document.getElementById('fullname').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const contact = document.getElementById('contact').value.trim();
-      const username = document.getElementById('new-username').value.trim();
-      const password = document.getElementById('new-password').value;
-      const confirmPassword = document.getElementById('confirm-password').value;
-
-      if (!fullname || !email || !contact || !username || !password || !confirmPassword) {
-        alert('Please fill all fields.');
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        alert('Passwords do not match.');
-        return;
-      }
-
-      let users = JSON.parse(localStorage.getItem('users')) || [];
-      if (users.some(u => u.username === username)) {
-        alert('Username already exists.');
-        return;
-      }
-
-      const newUser = { fullname, email, contact, username, password };
-      users.push(newUser);
-      localStorage.setItem('users', JSON.stringify(users));
-      alert('Account created successfully. Please login.');
-      showPage('login');
-    });
-
-    // Load dashboard with user info
-    function loadDashboard(user) {
-      document.getElementById('display-name').textContent = user.fullname;
-      document.getElementById('account-username').textContent = user.username;
-      document.getElementById('account-fullname').textContent = user.fullname;
-      document.getElementById('account-email').textContent = user.email;
-      document.getElementById('account-contact').textContent = user.contact;
-
-      switchDashboardPage('home');
+    if (users.some(u => u.username === username)) {
+      alert('Username already exists.');
+      return;
     }
 
-    // On page load, check if user is logged in
-      window.onload = function() {
+    const newUser = { fullname, email, contact, username, password };
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    alert('Account created successfully. Please login.');
+    showPage('login');
+  });
+
+  function logout() {
+  const confirmLogout = confirm("Logging out will erase your account data. Are you sure?");
+  if (!confirmLogout) return;
+
   const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-      if (loggedInUser) {
-        loadDashboard(loggedInUser);
-        showPage('dashboard');
-      } else {
-        showPage('login');
-      }
-    };
-
-   function logout() {
-  const confirmDelete = confirm("Logging out will erase your account data. Are you sure?");
-  if (!confirmDelete) return;
-
-  const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
-
   if (loggedInUser) {
-    let users = JSON.parse(localStorage.getItem('users')) || [];
-
     users = users.filter(user => user.username !== loggedInUser.username);
     localStorage.setItem('users', JSON.stringify(users));
-    sessionStorage.removeItem('loggedInUser');
   }
+
+  localStorage.removeItem('loggedInUser');
+  localStorage.setItem('isLoggedOut', 'true');
+
+  document.getElementById('signupForm').reset();
+  document.getElementById('loginForm').reset();
 
   showPage('login');
 }
 
-document.getElementById('resetPasswordForm').addEventListener('submit', function(event) {
-  event.preventDefault();
+  document.getElementById('resetPasswordForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-  const oldPassword = document.getElementById('oldPassword').value.trim();
-  const newPassword = document.getElementById('newPassword').value.trim();
-  const confirmPassword = document.getElementById('confirmPassword').value.trim();
-  const messageEl = document.getElementById('message');
+    const oldPassword = document.getElementById('oldPassword').value.trim();
+    const newPassword = document.getElementById('newPassword').value.trim();
+    const confirmPassword = document.getElementById('confirmPassword').value.trim();
+    const messageEl = document.getElementById('message');
 
-  messageEl.textContent = '';
-  messageEl.className = 'message';
+    messageEl.textContent = '';
+    messageEl.className = 'message';
 
-  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-  if (!loggedInUser) {
-    messageEl.textContent = 'You must be logged in to reset your password.';
-    messageEl.classList.add('error');
-    return;
-  }
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (!loggedInUser) {
+      messageEl.textContent = 'You must be logged in to reset your password.';
+      messageEl.classList.add('error');
+      return;
+    }
 
-  if (oldPassword !== loggedInUser.password) {
-    messageEl.textContent = 'Old password is incorrect.';
-    messageEl.classList.add('error');
-    return;
-  }
+    if (oldPassword !== loggedInUser.password) {
+      messageEl.textContent = 'Old password is incorrect.';
+      messageEl.classList.add('error');
+      return;
+    }
 
-  if (newPassword.length < 6) {
-    messageEl.textContent = 'New password must be at least 6 characters long.';
-    messageEl.classList.add('error');
-    return;
-  }
+    if (newPassword.length < 6) {
+      messageEl.textContent = 'New password must be at least 6 characters long.';
+      messageEl.classList.add('error');
+      return;
+    }
 
-  if (newPassword !== confirmPassword) {
-    messageEl.textContent = 'New password and confirmation do not match.';
-    messageEl.classList.add('error');
-    return;
-  }
+    if (newPassword !== confirmPassword) {
+      messageEl.textContent = 'New password and confirmation do not match.';
+      messageEl.classList.add('error');
+      return;
+    }
 
-  if (oldPassword === newPassword) {
-    messageEl.textContent = 'New password must be different from old password.';
-    messageEl.classList.add('error');
-    return;
-  }
+    if (oldPassword === newPassword) {
+      messageEl.textContent = 'New password must be different from old password.';
+      messageEl.classList.add('error');
+      return;
+    }
 
-  // Update password in localStorage
-  const users = JSON.parse(localStorage.getItem('users')) || [];
-  const userIndex = users.findIndex(u => u.username === loggedInUser.username);
+    const userIndex = users.findIndex(u => u.username === loggedInUser.username);
+    if (userIndex !== -1) {
+      users[userIndex].password = newPassword;
+      localStorage.setItem('users', JSON.stringify(users));
 
-  if (userIndex !== -1) {
-    users[userIndex].password = newPassword;
-    localStorage.setItem('users', JSON.stringify(users));
+      loggedInUser.password = newPassword;
+      localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
 
-    // Update localStorage
-    loggedInUser.password = newPassword;
-    localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+      messageEl.textContent = 'Password reset successful!';
+      messageEl.classList.add('success');
+      this.reset();
 
-    messageEl.textContent = 'Password reset successful!';
-    messageEl.classList.add('success');
-    this.reset();
-  } else {
-    messageEl.textContent = 'User not found. Please log in again.';
-    messageEl.classList.add('error');
-  }
+      setTimeout(() => {
+        alert('Please log in with your new password.');
+        logout();
+      }, 2000);
+    } else {
+      messageEl.textContent = 'User not found. Please log in again.';
+      messageEl.classList.add('error');
+    }
+  });
+
+  window.onload = function() {
+    const isLoggedOut = localStorage.getItem('isLoggedOut') === 'true';
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+    if (!isLoggedOut && loggedInUser) {
+      loadDashboard(loggedInUser);
+      showPage('dashboard');
+    } else {
+      showPage('login');
+    }
+  };
+
+function generatePlayerId() {
+  const prefix = 'PID-';
+  const randomDigits = Math.floor(100000 + Math.random() * 900000); // 6 digits
+  return prefix + randomDigits;
+}
+
+// Add event listeners to all "Get ID" buttons
+document.querySelectorAll('.get-id-btn').forEach((button) => {
+  button.addEventListener('click', function () {
+    const idDiv = this.nextElementSibling; // the .player-id div
+    const newId = generatePlayerId();
+    idDiv.textContent = `Your Player ID: ${newId}`;
+    idDiv.style.color = 'gold';
+    idDiv.style.marginTop = '10px';
+    idDiv.style.fontWeight = 'bold';
+  });
 });
-
-  </script>
+</script>
 </body>
 </html>
-
